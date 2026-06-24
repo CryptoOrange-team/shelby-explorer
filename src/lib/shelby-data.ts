@@ -27,6 +27,26 @@ export interface SPNode { address: string; activeSlots: number; totalSlots: numb
 export interface BlobItem { name: string; size: number; owner: string; chunksets: number; created: string; expires?: string; isDeleted?: boolean; isWritten?: boolean; }
 export interface NetStatus { lastVersion: number; lastTxnTime: string; lastUpdated: string; }
 
+export interface BlobDetail {
+  name: string; size: number; owner: string; chunksets: number;
+  created: string; expires?: string; isDeleted?: boolean; isWritten?: boolean;
+  placementGroup?: string; sliceAddress?: string;
+}
+
+export async function getBlobDetail(blobName: string): Promise<BlobDetail | null> {
+  try {
+    const query = `query($name:String!){blobs(where:{blob_name:{_eq:$name}},limit:1){blob_name size owner created_at num_chunksets expires_at is_deleted is_written placement_group slice_address}}`;
+    const data = await gf(query, { name: blobName });
+    const b = data?.blobs?.[0];
+    if (!b) return null;
+    return {
+      name: b.blob_name, size: parseInt(b.size,10)||0, owner: b.owner, chunksets: parseInt(b.num_chunksets,10)||0,
+      created: b.created_at, expires: b.expires_at, isDeleted: b.is_deleted, isWritten: b.is_written,
+      placementGroup: b.placement_group, sliceAddress: b.slice_address,
+    };
+  } catch { return null; }
+}
+
 export interface SPDetail extends SPNode {
   slots: { placement_group: string; slot_index: number; status: string; updated_at: number }[];
   blobs: BlobItem[];

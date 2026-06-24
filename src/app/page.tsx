@@ -161,7 +161,9 @@ function BlobTable({blobs,showTime}:{blobs:{name:string;size:number;owner:string
             return(
               <tr key={i} className="border-b border-border last:border-0 hover:bg-surface transition-colors">
                 <td className="py-1.5 pl-3 pr-2 font-mono text-text3">{i+1}</td>
-                <td className="py-1.5 px-2 text-text2 truncate max-w-[180px] sm:max-w-[300px]" title={b.name}>{shortName(b.name)}</td>
+                <td className="py-1.5 px-2 text-text2 truncate max-w-[180px] sm:max-w-[300px]" title={b.name}>
+                  <Link href={`/tools/sp-explorer/blob?name=${encodeURIComponent(b.name)}`} className="hover:text-accent transition-colors">{shortName(b.name)}</Link>
+                </td>
                 <td className="py-1.5 px-2 font-mono text-accent font-semibold text-right">{fmtB(b.size)}</td>
                 <td className="py-1.5 px-2"><span className={`font-mono text-[9px] ${bs}`}>{badge}</span></td>
                 <td className="py-1.5 px-2 hidden sm:table-cell"><Link href={`/tools/sp-explorer/owner/${b.owner}`} className="font-mono text-text3 hover:text-accent transition-colors">{short(b.owner)}</Link></td>
