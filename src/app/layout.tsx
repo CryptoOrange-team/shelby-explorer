@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -37,10 +38,7 @@ function Header() {
         </nav>
         <div className="ml-auto flex items-center gap-3">
           <a href="/api/network-stats" className="text-sm text-text2 hover:text-accent transition-colors font-mono text-xs">API</a>
-          <button onClick={() => { document.documentElement.classList.toggle("dark"); try { localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light"); } catch (_) {} }}
-            className="w-10 h-10 rounded-full bg-surface border border-border shadow-sm flex items-center justify-center text-text2 hover:text-text transition-colors text-sm">
-            <span className="dark:hidden">☾</span><span className="hidden dark:inline">☀</span>
-          </button>
+          <ThemeToggle />
         </div>
       </div>
     </header>
