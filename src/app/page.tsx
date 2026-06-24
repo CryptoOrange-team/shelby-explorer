@@ -46,12 +46,6 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
         </div>
       </div>
 
-      {/* Growth anomaly warning */}
-      {d.growth.dayBlobs > d.growth.weekBlobs * 0.3 && (
-        <div className="mb-4 p-2 border border-accent/30 bg-accent/5 text-[10px] font-mono text-accent">
-          high activity: 24h volume ({fmtN(d.growth.dayBlobs)}) is &gt;30% of weekly ({fmtN(d.growth.weekBlobs)})
-        </div>
-      )}
 
       {d.error && <div className="p-3 mb-5 border border-red-500/30 bg-red-500/5 text-xs text-red-400 font-mono">{d.error}</div>}
 
