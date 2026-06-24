@@ -1,67 +1,30 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-bg: #0b0b0e;
-  --color-surface: #131317;
-  --color-surface-alt: #18181d;
-  --color-border: #23232a;
-  --color-border-light: #2a2a32;
-  --color-text: #e1e1e6;
-  --color-text-secondary: #8b8b96;
-  --color-text-muted: #54545e;
-  --color-accent: #f59e0b;
-  --color-accent-hover: #fbbf24;
-  --color-green: #22c55e;
-  --color-green-soft: rgba(34,197,94,.1);
-  --color-yellow: #eab308;
-  --color-yellow-soft: rgba(234,179,8,.1);
-  --color-red: #ef4444;
-  --color-red-soft: rgba(239,68,68,.1);
-  --color-blue-soft: rgba(59,130,246,.1);
-}
-
 :root {
-  --color-bg: #0b0b0e;
-  --color-surface: #131317;
-  --color-surface-alt: #18181d;
-  --color-border: #23232a;
-  --color-border-light: #2a2a32;
-  --color-text: #e1e1e6;
-  --color-text-secondary: #8b8b96;
-  --color-text-muted: #54545e;
-  --color-accent: #f59e0b;
-  --color-accent-hover: #fbbf24;
-}
-
-.light {
-  --color-bg: #f8f8fa;
-  --color-surface: #f0f0f3;
-  --color-surface-alt: #e8e8ed;
-  --color-border: #dddde3;
-  --color-border-light: #d0d0d8;
-  --color-text: #18181b;
-  --color-text-secondary: #5c5c66;
-  --color-text-muted: #8b8b96;
-  --color-accent: #d97706;
-  --color-accent-hover: #b45309;
+  --bg: #ffffff;
+  --surface: #f7f8fa;
+  --border: #e8eaed;
+  --text: #1a1d24;
+  --text2: #5f6368;
+  --text3: #9aa0a6;
+  --accent: #1a73e8;
+  --green: #137333;
+  --green-bg: #e6f4ea;
+  --yellow: #e37400;
+  --yellow-bg: #fef7e0;
+  --red: #c5221f;
+  --red-bg: #fce8e6;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", monospace;
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: "Atkinson Hyperlegible Next", ui-sans-serif, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: var(--color-accent); color: #0b0b0e; }
-
-/* Focus ring */
-*:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border-light); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+::selection { background: #d2e3fc; color: var(--text); }
