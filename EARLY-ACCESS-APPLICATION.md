@@ -4,7 +4,7 @@
 
 ## Project
 
-**ShelbyNet Explorer** — A real-time network observability dashboard for the Shelby decentralized hot storage protocol.
+**Shelby Storage Provider Monitor** — A real-time storage provider monitoring and discovery platform for ShelbyNet.
 
 **Live:** https://shelby-explorer-livid.vercel.app
 
@@ -14,153 +14,105 @@
 
 ## 1. What are you building?
 
-A network-level explorer and monitoring dashboard for ShelbyNet. Unlike the official Shelby Explorer (which shows per-account data), this project provides the ecosystem-level view: all storage providers, all blobs, all on-chain events, aggregated and searchable in one place.
+A monitoring dashboard for Shelby storage providers (SPs). The official Shelby Explorer shows per-account blob data. This project focuses exclusively on the SP layer — the nodes that run the network.
 
-### Current modules (all live, all querying real ShelbyNet data):
+Storage providers are the backbone of Shelby. They invest in hardware, maintain uptime, and earn revenue from writes and reads. Without them, the network has no storage. But today there is no tool for SPs to be discovered, compared, or monitored.
 
-**Storage Provider Directory**
-- Real-time SP list with health scoring algorithm (active slot ratio × 60% + recency × 40%)
+### What the dashboard does:
+
+**SP Discovery & Comparison**
+- Real-time directory of all storage providers on ShelbyNet
+- Health scoring algorithm: active slot ratio (60%) + recency (40%)
 - Sort by active slots or total capacity
-- Search by address
-- Individual SP detail pages showing full slot assignment history
-- Zebra-stripe rows, green dot indicators for SPs active within 10 minutes
-- Copy-to-clipboard for addresses
-- CSV export
+- Search by SP address
+- Side-by-side comparison of SP metrics
 
-**Blob Browser**
-- Recent uploads (30 most recent, by `created_at` descending)
-- Largest blobs (top 50, by `size` descending)
-- Blob status tracking: active / writing / expiring / deleted
-- File type breakdown: video, image, document, archive, other — with size aggregation
-- Individual blob detail pages with full metadata: owner, size, chunksets, created, expires, placement group, slice address
-- Per-owner pages showing all blobs belonging to any address
+**SP Detail Pages**
+- Full slot assignment history for each SP
+- Active / joining / vacated slot breakdown
+- Blob inventory per SP (all files stored by that provider)
+- Links to on-chain data on Shelby Explorer
 
-**Live Event Feed**
-- On-chain blob activities: `BlobRegistered`, `BlobWritten`, `BlobDeleted` events
-- Timestamp, event type, blob name, and owner address for each event
-- Clickable blob names and owner links
+**Network-Wide SP Health Overview**
+- Total SP count vs active SP count
+- Total slots vs active slots
+- Health score distribution across all SPs
+- Green dot indicator for SPs active within 10 minutes
 
-**Cost Comparison**
-- Real-time AWS S3 vs Shelby cost estimate, computed from actual network data
-- Formula: `(total_size_gb × $0.073/GB) vs (total_size_gb × $0.024/GB)`
-- Growth tracking: 24-hour and 7-day blob volume with percentage breakdown
+**SP Discovery Tools**
+- Copy SP address to clipboard
+- CSV export of all SP data
+- Live 30-second auto-refresh
 
-**Network Topology Map**
-- SVG radial diagram with concentric rings representing network layers
-- SP nodes positioned by active slot count, with size proportional to capacity
-- Mesh lines showing inter-SP connections
-- Interactive hover tooltips with SP details
+### Why SP monitoring matters
 
-**Developer Tools**
-- REST API: `GET /api/network-stats` returns JSON with full SP list, health scores, growth data
-- CSV export: single-click download of all SP data
-- Quick links to official docs, GitHub, Discord, and SDK installation commands
+Every mature decentralized storage network has an SP monitoring tool:
 
-### Data sources
+- **Filecoin** has Filfox and Beryx — SP rankings, reputation scores, deal tracking
+- **Storj** has the SNO Dashboard — per-node earnings, audit scores, uptime monitoring
+- **Sia** has Sia Sentinel — host reliability scoring and leaderboards
 
-All data comes from the **ShelbyNet Hasura GraphQL indexer** (`api.shelbynet.aptoslabs.com`). Queries include:
+Shelby has none of this. An SP operator who invests $800/month in hardware has no way to check their node's health relative to the network, no way to be discovered by users, and no public proof of reliability.
 
-- `placement_group_slots` — SP slot assignments, status, timestamps
-- `blobs` — full blob metadata with aggregation (count, size sum)
-- `blob_activities` — on-chain event log
-- `processor_status` — indexer health check
-- Time-range aggregates for growth tracking (24h, 7d windows)
+### Additional modules
 
-The dashboard queries live on every request (`cache: no-store`). No database, no caching layer, no data modification.
+While the dashboard's core focus is SP monitoring, it also includes supporting modules to provide context:
+
+- **Blob Browser** — what's actually being stored on the network (recent, largest, by type)
+- **Live Events** — on-chain activity feed showing blob registrations and writes
+- **Cost Comparison** — AWS S3 vs Shelby pricing based on actual network data
+- **Developer Tools** — REST API, CSV export, SDK quick links
+
+### Data source
+
+All SP data comes from the ShelbyNet Hasura GraphQL indexer. The primary query joins `placement_group_slots` to aggregate per-SP metrics. Growth tracking uses time-range `blobs_aggregate` queries. No database, no caching — every request queries live data.
 
 ### Technical stack
 
-- **Framework:** Next.js 16 (App Router, server components, dynamic rendering)
-- **Styling:** Tailwind CSS with custom design tokens (light/dark theme via CSS variables)
-- **Typography:** Atkinson Hyperlegible Next (body) + JetBrains Mono (data)
-- **Data:** ShelbyNet Hasura GraphQL (POST with Bearer token auth)
-- **Deployment:** Vercel (automatic CI/CD from GitHub)
-- **License:** Open source (MIT)
+Next.js 16 · Tailwind CSS · TypeScript · ShelbyNet GraphQL · Vercel · Open source
 
 ---
 
-## 2. What problem does this solve?
+## 2. Why do you need Early Access?
 
-ShelbyNet currently has no public network-level dashboard. This creates concrete problems for three user groups:
+The dashboard currently operates with a community API key. Official Early Access would provide:
 
-**Storage Providers** invest significant capital in hardware (a medium SP configuration runs ~$800/month). They have no way to:
-- Be discovered by potential users
-- Compare their performance against other SPs
-- Demonstrate reliability to the network
-- Monitor their own slot health in context
-
-**Users and developers** have no way to:
-- Browse what's stored on the network
-- Compare storage providers before choosing where to store data
-- Quickly check if the network is healthy before building on it
-- Understand network growth trends
-
-**The Shelby ecosystem** lacks:
-- A public health dashboard (every major protocol has one — Filecoin has Filfox, Storj has SNO dashboards)
-- A tool to onboard new SPs (showing them the network exists and is active)
-- A demonstration of network adoption (32M blobs, 3.2 PB stored — but nobody can see this)
-
-The official `explorer.shelby.xyz/shelbynet` shows per-account data. This project fills the gap by providing the network-level observability layer.
+1. **Reliable API access** — documented rate limits, stability guarantees
+2. **Richer SP data** — per-SP performance metrics (read latency, uptime history, audit scores) that the current public GraphQL may limit
+3. **On-chain SP metadata** — `availability_zone`, IP address, stake amount from `storage_provider_registry` view functions
+4. **Geographic distribution** — once zone data is accessible, a real world map of SP locations
+5. **Official ecosystem listing** — credibility for SP operators who use the dashboard
 
 ---
 
-## 3. Why do you need Early Access?
+## 3. What's already built
 
-The project already operates using a community-discovered API key to query the ShelbyNet GraphQL indexer. This works but has limitations:
+The dashboard is live and tracking real ShelbyNet data:
 
-1. **No guaranteed rate limits** — the current setup could break if traffic increases or the key rotates
-2. **Limited data** — the public GraphQL endpoint exposes `placement_group_slots` but not per-SP performance metrics (read latency, audit scores, uptime history)
-3. **No geographic data** — SP `availability_zone` data exists on-chain but is not exposed through the current GraphQL schema
-4. **No official recognition** — being listed as an ecosystem project gives credibility to both the dashboard and the network
+- **SP directory** with health scoring, search, sort, detail pages
+- **Blob browser** with recent uploads, largest files, file type stats
+- **Live events** from on-chain activity
+- **Cost comparison** computed from live network data
+- **REST API** and CSV export
+- **Network topology** visualization
 
-With official Early Access, we would:
-
-- Upgrade to a reliable API key with documented rate limits
-- Expose per-SP performance metrics when the data becomes available
-- Add geographic distribution using on-chain `availability_zone` data
-- Build SP alerting (status changes, slot health degradation)
-- Integrate with the Shelby SDK for in-dashboard blob management
-- Serve as a community reference implementation for ShelbyNet data access
+20+ iterations of refinement. Open source.
 
 ---
 
-## 4. What have you already built?
+## 4. Roadmap
 
-The dashboard is fully functional and deployed. Current network snapshot from live data:
+**Now (with Early Access):**
+- Geographic SP distribution map
+- Per-SP performance metrics (when on-chain data available)
+- SP ranking leaderboard
 
-- **32,184,372 blobs** tracked
-- **3.2 petabytes** total storage (3,623,155,297,746,718 bytes)
-- **83,639,870** on-chain operations
-- **Active storage providers** with real-time health monitoring
-- **1.2 million blobs** added in the last 24 hours (~276 GB)
+**Next (1-2 months):**
+- SP status change alerts
+- Historical SP performance trends
+- SP comparison tool
 
-The codebase has gone through 20+ iterations of refinement — starting from a simple SP table, adding blob browsing, event feeds, topology maps, developer tools, and responsive design. Each iteration was driven by actually using the dashboard to explore ShelbyNet data.
-
----
-
-## 5. What's the roadmap?
-
-**Immediate (with Early Access):**
-- SP performance metrics (when on-chain data becomes available)
-- Geographic distribution map using availability zone data
-- Dark/light theme persistence
-
-**Short-term (1-2 months):**
-- SP status change alerts (email/webhook)
-- Blob search by name
-- Owner activity timeline
-
-**Medium-term (3-6 months):**
-- Shelby SDK integration for direct blob upload/download from the dashboard
-- SP comparison tool (side-by-side metrics)
-- Historical trend charts (daily/weekly/monthly storage growth)
-
----
-
-## 6. Why this matters for Shelby
-
-Every successful decentralized storage network has a public dashboard. Filecoin has Filfox and Beryx. Storj has the SNO dashboard and Grafana templates. Walrus has the Staketab explorer.
-
-ShelbyNet currently stores 3.2 PB across 32 million blobs — real adoption that nobody can see. This project makes that adoption visible. It gives SPs a reason to join (they can be discovered). It gives users confidence (they can see the network is alive). It gives developers a reference for how to query ShelbyNet data.
-
-The dashboard is already live and working. Early Access support would make it official, reliable, and more capable.
+**Later (3-6 months):**
+- SDK integration for SP onboarding
+- SP earnings estimator
+- Multi-network support (testnet + mainnet)
