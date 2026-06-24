@@ -8,26 +8,41 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark');}catch(e){}` }} />
       </head>
-      <body style={{background:"var(--bg)",color:"var(--text)",fontFamily:"var(--font)"}} className="antialiased min-h-screen flex flex-col">
-        <header style={{borderBottom:"1px solid var(--border)"}} className="sticky top-0 z-50 bg-[var(--bg)]">
-          <div className="max-w-[1200px] mx-auto px-5 h-12 flex items-center justify-between">
-            <a href="/" className="flex items-baseline gap-2">
-              <span style={{fontWeight:600,fontSize:15}}>ShelbyNet</span>
-              <span style={{fontFamily:"var(--font-mono)",fontSize:10,color:"var(--text3)",letterSpacing:".05em"}}>EXPLORER</span>
-            </a>
-            <a href="https://github.com/CryptoOrange-team/shelby-explorer" style={{fontSize:12,color:"var(--text2)"}} className="hover:text-white transition-colors">GitHub</a>
-          </div>
-        </header>
+      <body className="bg-bg text-text antialiased min-h-screen flex flex-col">
+        <Header />
         <main className="flex-1">{children}</main>
-        <footer style={{borderTop:"1px solid var(--border)",color:"var(--text3)",fontFamily:"var(--font-mono)",fontSize:10}} className="py-3 text-center">
-          shelbynet graphql &middot; shelby-explorer
-        </footer>
       </body>
     </html>
+  );
+}
+
+function Header() {
+  return (
+    <header className="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-sm">
+      <div className="max-w-[1440px] mx-auto px-12 max-sm:px-4 h-[72px] flex items-center">
+        <a href="/" className="flex items-baseline gap-2">
+          <span className="text-lg font-extrabold tracking-tight">ShelbyNet</span>
+          <span className="text-[10px] text-text3 uppercase tracking-wider font-mono">Explorer</span>
+        </a>
+        <nav className="ml-8 flex items-center gap-1 text-sm font-medium max-sm:hidden">
+          <a href="/?tab=sp" className="px-3 py-2 text-text2 hover:text-accent transition-colors rounded">SPs</a>
+          <a href="/?tab=blobs" className="px-3 py-2 text-text2 hover:text-accent transition-colors rounded">Blobs</a>
+          <a href="/?tab=events" className="px-3 py-2 text-text2 hover:text-accent transition-colors rounded">Events</a>
+        </nav>
+        <div className="ml-auto flex items-center gap-3">
+          <a href="/api/network-stats" className="text-sm text-text2 hover:text-accent transition-colors font-mono text-xs">API</a>
+          <button onClick={() => { document.documentElement.classList.toggle("dark"); try { localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light"); } catch (_) {} }}
+            className="w-10 h-10 rounded-full bg-surface border border-border shadow-sm flex items-center justify-center text-text2 hover:text-text transition-colors text-sm">
+            <span className="dark:hidden">☾</span><span className="hidden dark:inline">☀</span>
+          </button>
+        </div>
+      </div>
+    </header>
   );
 }
