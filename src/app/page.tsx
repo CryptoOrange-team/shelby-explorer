@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getShelbyData } from "@/lib/shelby-data";
 import { AutoRefresh } from "@/components/AutoRefresh";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/CopyButton";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "ShelbyNet Explorer", description: "SP nodes, blobs, events — raw ShelbyNet data." };
@@ -27,6 +29,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="max-w-[1100px] mx-auto px-4 sm:px-5 py-6 sm:py-8">
+      <KeyboardShortcuts currentTab={tab} />
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>
@@ -34,19 +37,28 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
           <p className="text-xs text-text3 font-mono mt-0.5">
             {fmtN(d.blobCount)} blobs &middot; {fmtB(d.totalSize)} &middot; {fmtN(d.activityCount)} ops
             &middot; {d.activeSPs}/{d.totalSPs} SPs &middot; health <span className={healthScore>=70?"text-green-400":healthScore>=40?"text-yellow-400":"text-red-400"}>{healthScore}</span>
+            {!d.status&&<span className="text-red-400 ml-1">indexer down</span>}
           </p>
         </div>
-        <div className="text-right">
+        <div className="text-right text-[9px] text-text3 font-mono">
           <AutoRefresh interval={30} />
-          <p className="text-[9px] text-text3 font-mono mt-0.5">+{fmtN(d.growth.dayBlobs)} blobs/24h &middot; {d.status?"indexer up":"indexer down"}</p>
+          <p className="mt-0.5">+{fmtN(d.growth.dayBlobs)}/24h &middot; {d.status?"up":"down"}</p>
+          <p className="mt-0.5">keys: <kbd className="px-1 border border-border rounded text-[8px]">/</kbd> search <kbd className="px-1 border border-border rounded text-[8px]">1-5</kbd> tab</p>
         </div>
       </div>
+
+      {/* Growth anomaly warning */}
+      {d.growth.dayBlobs > d.growth.weekBlobs * 0.3 && (
+        <div className="mb-4 p-2 border border-accent/30 bg-accent/5 text-[10px] font-mono text-accent">
+          high activity: 24h volume ({fmtN(d.growth.dayBlobs)}) is &gt;30% of weekly ({fmtN(d.growth.weekBlobs)})
+        </div>
+      )}
 
       {d.error && <div className="p-3 mb-5 border border-red-500/30 bg-red-500/5 text-xs text-red-400 font-mono">{d.error}</div>}
 
       {/* Tabs */}
       <div className="flex gap-0 mb-4 border-b border-border">
-        {[{k:"sp",l:"SPs"},{k:"blobs",l:"Blobs"},{k:"events",l:"Events"},{k:"price",l:"Cost"},{k:"dev",l:"Dev"}].map(t=>(
+        {[{k:"sp",l:"1 SPs"},{k:"blobs",l:"2 Blobs"},{k:"events",l:"3 Events"},{k:"price",l:"4 Cost"},{k:"dev",l:"5 Dev"}].map(t=>(
           <a key={t.k} href={`?tab=${t.k}&sort=${sort}`} className={`px-3 py-1.5 text-xs font-medium border-b-2 -mb-[1px] transition-colors ${tab===t.k?"border-accent text-text":"border-transparent text-text3 hover:text-text2"}`}>{t.l}</a>
         ))}
         <a href="/tools/sp-explorer/map" className="px-3 py-1.5 text-xs font-medium border-b-2 border-transparent text-text3 hover:text-text2 -mb-[1px]">Map</a>
@@ -110,11 +122,14 @@ function SPTable({nodes,search}:{nodes:{address:string;activeSlots:number;totalS
               return (
                 <tr key={sp.address} className={`border-b border-border last:border-0 hover:bg-surface transition-colors ${i%2===0?"bg-transparent":"bg-surface/30"}`}>
                   <td className="py-1.5 pl-3 pr-2">
+                  <div className="flex items-center gap-1">
                     <Link href={`/tools/sp-explorer/${sp.address}`} className="font-mono text-text2 hover:text-accent transition-colors" title={sp.address}>
                       {short(sp.address)}
                     </Link>
-                    {recentlySeen&&<span className="ml-1.5 w-1.5 h-1.5 rounded-full bg-green-400 inline-block" title="active <10min"/>}
-                  </td>
+                    <CopyButton text={sp.address} label="copy" />
+                    {recentlySeen&&<span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block shrink-0" title="active <10min"/>}
+                  </div>
+                </td>
                   <td className="py-1.5 px-2 font-mono text-green-400 font-semibold text-right">{sp.activeSlots}</td>
                   <td className="py-1.5 px-2 font-mono text-yellow-400 text-right">{sp.joiningSlots||"—"}</td>
                   <td className="py-1.5 px-2 font-mono text-red-400 text-right">{sp.vacatedSlots||"—"}</td>
