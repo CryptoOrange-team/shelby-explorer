@@ -118,7 +118,7 @@ export async function getShelbyData(sort: string = "active", search: string = ""
         dayBlobs: data.day_aggregate?.aggregate?.count ?? 0,
         daySize: parseInt(data.day_aggregate?.aggregate?.sum?.size ?? "0", 10) || 0,
       },
-      events: events.map(e => ({ name: e.blob_name, owner: e.owner, type: e.event_type.split("::").pop()?.replace("Event", "") ?? "", time: e.timestamp, hash: e.transaction_hash })),
+      events: events.map(e => ({ name: e.blob_name ?? "", owner: e.owner ?? "", type: (e.event_type ?? "").split("::").pop()?.replace("Event", "") ?? "", time: e.timestamp ?? "", hash: e.transaction_hash ?? "" })),
       recentBlobs: recentBlobsRaw.map(b => ({ name: b.blob_name, size: parseInt(b.size, 10) || 0, owner: b.owner, chunksets: parseInt(b.num_chunksets, 10) || 0, created: b.created_at, expires: b.expires_at, isDeleted: b.is_deleted, isWritten: b.is_written })),
       topBlobs: topBlobs.map(b => ({ name: b.blob_name, size: parseInt(b.size, 10) || 0, owner: b.owner, chunksets: parseInt(b.num_chunksets, 10) || 0, created: b.created_at, expires: b.expires_at, isDeleted: b.is_deleted, isWritten: b.is_written })),
       error: null,

@@ -165,7 +165,8 @@ function BlobTable({ blobs, showTime }: {
 }
 
 function EventsTable({ events }: { events: { name: string; owner: string; type: string; time: string; hash?: string }[] }) {
-  if (!events?.length) return <div className="py-20 text-center text-text3 text-sm">No recent events.</div>;
+  const valid = events?.filter(e => e?.name) ?? [];
+  if (!valid.length) return <div className="py-20 text-center text-text3 text-sm">No recent events.</div>;
   return (
     <div className="border border-border rounded overflow-hidden">
       <table className="w-full text-sm">
@@ -173,12 +174,20 @@ function EventsTable({ events }: { events: { name: string; owner: string; type: 
           <th className="py-2.5 pl-4 pr-3 w-28">Type</th><th className="py-2.5 px-3">Blob</th><th className="py-2.5 px-3">Owner</th><th className="py-2.5 pr-4 pl-3 text-right w-44">Time</th>
         </tr></thead>
         <tbody className="divide-y divide-border">
-          {events.map((e, i) => <tr key={i} className="hover:bg-surface transition-colors">
-            <td className="py-2 pl-4 pr-3 font-mono text-xs text-text3">{e.type || "—"}</td>
-            <td className="py-2 px-3 max-w-[350px] truncate" title={e.name}><Link href={`/tools/sp-explorer/blob?name=${encodeURIComponent(e.name)}`} className="text-link hover:underline">{shortName(e.name)}</Link></td>
-            <td className="py-2 px-3"><Link href={`/tools/sp-explorer/owner/${e.owner}`} className="text-link hover:underline font-mono text-xs">{short(e.owner)}</Link></td>
-            <td className="py-2 pr-4 pl-3 text-right font-mono text-xs text-text3">{e.time ? new Date(e.time).toLocaleString() : "—"}</td>
-          </tr>)}
+          {valid.map((e, i) => {
+            const safeName = e.name ?? "";
+            const safeOwner = e.owner ?? "";
+            return <tr key={i} className="hover:bg-surface transition-colors">
+              <td className="py-2 pl-4 pr-3 font-mono text-xs text-text3">{e.type || "—"}</td>
+              <td className="py-2 px-3 max-w-[350px] truncate" title={safeName}>
+                {safeName ? <Link href={`/tools/sp-explorer/blob?name=${encodeURIComponent(safeName)}`} className="text-link hover:underline">{shortName(safeName)}</Link> : "—"}
+              </td>
+              <td className="py-2 px-3">
+                {safeOwner ? <Link href={`/tools/sp-explorer/owner/${safeOwner}`} className="text-link hover:underline font-mono text-xs">{short(safeOwner)}</Link> : "—"}
+              </td>
+              <td className="py-2 pr-4 pl-3 text-right font-mono text-xs text-text3">{e.time ? new Date(e.time).toLocaleString() : "—"}</td>
+            </tr>;
+          })}
         </tbody>
       </table>
     </div>
