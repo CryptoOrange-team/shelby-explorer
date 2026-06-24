@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getShelbyData } from "@/lib/shelby-data";
 import { AutoRefresh } from "@/components/AutoRefresh";
-import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/CopyButton";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +28,6 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="max-w-[1100px] mx-auto px-4 sm:px-5 py-6 sm:py-8">
-      <KeyboardShortcuts currentTab={tab} />
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>
