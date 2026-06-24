@@ -1,36 +1,67 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-bg: #fafaf9;
-  --color-surface: #f5f5f4;
-  --color-surface2: #eeeeec;
-  --color-border: #dddde0;
-  --color-text: #1a1a1c;
-  --color-text2: #6b6b74;
-  --color-text3: #94949c;
-  --color-accent: #f97316;
-  --color-accent-text: #ea580c;
+  --color-bg: #0b0b0e;
+  --color-surface: #131317;
+  --color-surface-alt: #18181d;
+  --color-border: #23232a;
+  --color-border-light: #2a2a32;
+  --color-text: #e1e1e6;
+  --color-text-secondary: #8b8b96;
+  --color-text-muted: #54545e;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #fbbf24;
+  --color-green: #22c55e;
+  --color-green-soft: rgba(34,197,94,.1);
+  --color-yellow: #eab308;
+  --color-yellow-soft: rgba(234,179,8,.1);
+  --color-red: #ef4444;
+  --color-red-soft: rgba(239,68,68,.1);
+  --color-blue-soft: rgba(59,130,246,.1);
 }
 
-.dark {
-  --color-bg: #141415;
-  --color-surface: #1a1a1c;
-  --color-surface2: #1f1f22;
-  --color-border: #2a2a2e;
-  --color-text: #e8e8ec;
-  --color-text2: #8b8b94;
-  --color-text3: #5c5c64;
-  --color-accent: #f97316;
-  --color-accent-text: #fb923c;
+:root {
+  --color-bg: #0b0b0e;
+  --color-surface: #131317;
+  --color-surface-alt: #18181d;
+  --color-border: #23232a;
+  --color-border-light: #2a2a32;
+  --color-text: #e1e1e6;
+  --color-text-secondary: #8b8b96;
+  --color-text-muted: #54545e;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #fbbf24;
+}
+
+.light {
+  --color-bg: #f8f8fa;
+  --color-surface: #f0f0f3;
+  --color-surface-alt: #e8e8ed;
+  --color-border: #dddde3;
+  --color-border-light: #d0d0d8;
+  --color-text: #18181b;
+  --color-text-secondary: #5c5c66;
+  --color-text-muted: #8b8b96;
+  --color-accent: #d97706;
+  --color-accent-hover: #b45309;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: "Atkinson Hyperlegible Next", ui-sans-serif, system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: #f97316; color: #fff; }
+::selection { background: var(--color-accent); color: #0b0b0e; }
+
+/* Focus ring */
+*:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
