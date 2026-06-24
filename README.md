@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ShelbyNet Explorer
 
-## Getting Started
+Real-time network dashboard for the [Shelby](https://shelby.xyz) decentralized hot storage protocol. Monitors ShelbyNet — the public testnet co-developed by Aptos Labs and Jump Crypto.
 
-First, run the development server:
+**Live:** [shelby-explorer-livid.vercel.app](https://shelby-explorer-livid.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## What it shows
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Storage Providers** — directory with health scores, slot counts, search, sort, detail pages
+- **Blob Browser** — recent uploads, largest blobs, file type breakdown, blob detail pages
+- **Live Events** — on-chain feed (registrations, writes, deletions)
+- **Cost Comparison** — AWS S3 vs Shelby estimate from live network data
+- **Network Topology** — SVG radial map of SP nodes
+- **REST API** — `GET /api/network-stats`, `GET /api/export-sp`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Current network stats
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+~32M blobs · 3.2 PB stored · 83M operations · active SP nodes with real-time health monitoring
 
-## Learn More
+## Stack
 
-To learn more about Next.js, take a look at the following resources:
+Next.js 16 · Tailwind CSS · TypeScript · ShelbyNet Hasura GraphQL · Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All data queried live from the public ShelbyNet GraphQL indexer. No caching, no proxying, no modification.
 
-## Deploy on Vercel
+## About
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Independent community project. Not affiliated with Aptos Labs or Jump Crypto.
