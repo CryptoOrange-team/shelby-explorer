@@ -19,16 +19,29 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
       {/* Summary */}
-      <div className="flex items-baseline gap-3 text-xs text-text3 font-mono mb-6">
-        <span className="font-semibold text-text">{fmtN(d.blobCount)}</span> blobs
-        <span>&middot;</span>
-        <span className="font-semibold text-text">{fmtB(d.totalSize)}</span> stored
-        <span>&middot;</span>
-        <span className="font-semibold text-text">{fmtN(d.activityCount)}</span> operations
-        <span>&middot;</span>
-        <span className="font-semibold text-text">{d.activeSPs}/{d.totalSPs}</span> SPs active
-        <span>&middot;</span>
-        24h <span className="text-link">+{fmtN(d.growth.dayBlobs)}</span>
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs text-text3 font-mono mb-5">
+        <span><span className="font-semibold text-text">{fmtN(d.blobCount)}</span> blobs</span>
+        <span className="text-border">&middot;</span>
+        <span><span className="font-semibold text-text">{fmtB(d.totalSize)}</span> stored</span>
+        <span className="text-border">&middot;</span>
+        <span><span className="font-semibold text-text">{fmtN(d.activityCount)}</span> ops</span>
+        <span className="text-border">&middot;</span>
+        <span><span className="font-semibold text-text">{d.activeSPs}/{d.totalSPs}</span> SPs</span>
+        <span className="text-border">&middot;</span>
+        <span>24h <span className="text-link font-semibold">+{fmtN(d.growth.dayBlobs)}</span> blobs</span>
+        <span className="text-border">&middot;</span>
+        <span>7d <span className="text-link">+{fmtN(d.growth.weekBlobs)}</span></span>
+      </div>
+
+      {/* Growth bars */}
+      <div className="flex gap-1 mb-6 h-1 rounded-full overflow-hidden bg-border max-w-md">
+        {d.blobCount > 0 && (
+          <>
+            <div className="bg-link/30 h-full" style={{ width: `${Math.max(1, ((d.blobCount - d.growth.weekBlobs) / d.blobCount) * 100)}%` }} title={`Early: ${fmtN(d.blobCount - d.growth.weekBlobs)}`} />
+            <div className="bg-link/60 h-full" style={{ width: `${Math.max(1, ((d.growth.weekBlobs - d.growth.dayBlobs) / d.blobCount) * 100)}%` }} title={`7d: ${fmtN(d.growth.weekBlobs - d.growth.dayBlobs)}`} />
+            <div className="bg-link h-full" style={{ width: `${Math.max(1, (d.growth.dayBlobs / d.blobCount) * 100)}%` }} title={`24h: ${fmtN(d.growth.dayBlobs)}`} />
+          </>
+        )}
       </div>
 
       {d.error && (
@@ -87,9 +100,12 @@ function SPTable({ nodes }: { nodes: { address: string; activeSlots: number; tot
               const hc = health >= 80 ? "text-green" : health >= 50 ? "text-yellow" : "text-red";
               return (
                 <tr key={sp.address} className="hover:bg-surface transition-colors">
-                  <td className="py-2 pl-4 pr-3">
+                  <td className="py-2.5 pl-4 pr-3">
+                  <div className="flex items-center gap-2">
+                    {sp.lastSeen && (Date.now() - sp.lastSeen / 1000) < 600_000 && <span className="w-2 h-2 rounded-full bg-green shrink-0" title="Active within 10 min" />}
                     <Link href={`/tools/sp-explorer/${sp.address}`} className="text-link hover:underline font-mono text-xs">{short(sp.address)}</Link>
-                  </td>
+                  </div>
+                </td>
                   <td className="py-2 px-3 text-right font-mono font-medium text-green">{sp.activeSlots}</td>
                   <td className="py-2 px-3 text-right font-mono text-yellow">{sp.joiningSlots || "—"}</td>
                   <td className="py-2 px-3 text-right font-mono text-red">{sp.vacatedSlots || "—"}</td>
