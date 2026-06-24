@@ -35,15 +35,16 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
         <div>
           <h1 className="text-2xl font-bold tracking-tight">ShelbyNet</h1>
           <p className="text-xs text-text3 font-mono mt-0.5">
-            {fmtN(d.blobCount)} blobs &middot; {fmtB(d.totalSize)} &middot; {fmtN(d.activityCount)} ops
-            &middot; {d.activeSPs}/{d.totalSPs} SPs &middot; health <span className={healthScore>=70?"text-green-400":healthScore>=40?"text-yellow-400":"text-red-400"}>{healthScore}</span>
-            {!d.status&&<span className="text-red-400 ml-1">indexer down</span>}
+            {fmtN(d.blobCount)} blobs &middot; {fmtB(d.totalSize)} &middot; {fmtN(d.activityCount)} ops &middot; {d.activeSPs}/{d.totalSPs} SPs
+          </p>
+          <p className="text-[10px] text-text3 font-mono mt-0.5">
+            24h +{fmtN(d.growth.dayBlobs)} blobs ({fmtB(d.growth.daySize)}) &middot; 7d +{fmtN(d.growth.weekBlobs)} blobs &middot;
+            health <span className={healthScore>=70?"text-green-400":healthScore>=40?"text-yellow-400":"text-red-400"}>{healthScore}/100</span>
+            {!d.status&&<span className="text-red-400 ml-1">· indexer down</span>}
           </p>
         </div>
-        <div className="text-right text-[9px] text-text3 font-mono">
+        <div className="text-right">
           <AutoRefresh interval={30} />
-          <p className="mt-0.5">+{fmtN(d.growth.dayBlobs)}/24h &middot; {d.status?"up":"down"}</p>
-          <p className="mt-0.5">keys: <kbd className="px-1 border border-border rounded text-[8px]">/</kbd> search <kbd className="px-1 border border-border rounded text-[8px]">1-5</kbd> tab</p>
         </div>
       </div>
 
@@ -58,7 +59,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
 
       {/* Tabs */}
       <div className="flex gap-0 mb-4 border-b border-border">
-        {[{k:"sp",l:"1 SPs"},{k:"blobs",l:"2 Blobs"},{k:"events",l:"3 Events"},{k:"price",l:"4 Cost"},{k:"dev",l:"5 Dev"}].map(t=>(
+        {[{k:"sp",l:"SPs"},{k:"blobs",l:"Blobs"},{k:"events",l:"Events"},{k:"price",l:"Cost"},{k:"dev",l:"Dev"}].map(t=>(
           <a key={t.k} href={`?tab=${t.k}&sort=${sort}`} className={`px-3 py-1.5 text-xs font-medium border-b-2 -mb-[1px] transition-colors ${tab===t.k?"border-accent text-text":"border-transparent text-text3 hover:text-text2"}`}>{t.l}</a>
         ))}
         <a href="/tools/sp-explorer/map" className="px-3 py-1.5 text-xs font-medium border-b-2 border-transparent text-text3 hover:text-text2 -mb-[1px]">Map</a>
